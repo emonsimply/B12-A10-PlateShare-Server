@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 
 const app = express()
@@ -37,8 +37,27 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/foods/:id", async (req, res) => {
+      const { id } = req.params;
+      const objectId = new ObjectId(id);
 
-    
+      const result = await foodCollection.findOne({ _id: objectId });
+
+      res.send({
+        success: true,
+        result,
+      });
+    });
+
+
+    app.post("/foods", async (req, res) => {
+      const data = req.body;
+      const result = await foodCollection.insertOne(data);
+      res.send({
+        success: true,
+        result,
+      });
+    });
 
     
     await client.db("admin").command({ ping: 1 });
