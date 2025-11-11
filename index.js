@@ -49,6 +49,18 @@ async function run() {
       });
     });
 
+    app.get("/featured-foods", async (req, res) => {
+      const result = await foodCollection
+        .find()
+        .sort({ quantity: "desc" })
+        .limit(6)
+        .toArray();
+
+      console.log(result);
+
+      res.send(result);
+    });
+
 
     app.post("/foods", async (req, res) => {
       const data = req.body;
@@ -58,6 +70,8 @@ async function run() {
         result,
       });
     });
+
+
 
     
     await client.db("admin").command({ ping: 1 });
