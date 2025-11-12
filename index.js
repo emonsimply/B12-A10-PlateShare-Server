@@ -59,7 +59,9 @@ async function run() {
 
     app.get("/my-foods", async (req, res) => {
       const email = req.query.email;
-      const result = await foodCollection.find({ donator_email: email }).toArray()
+      const result = await foodCollection
+        .find({ donator_email: email })
+        .toArray();
       res.send(result);
     });
 
@@ -72,7 +74,7 @@ async function run() {
       });
     });
 
-    app.put("/foods/:id",  async (req, res) => {
+    app.put("/foods/:id", async (req, res) => {
       const { id } = req.params;
       const data = req.body;
       const objectId = new ObjectId(id);
@@ -81,20 +83,31 @@ async function run() {
         $set: data,
       };
       const result = await foodCollection.updateOne(filter, update);
-      res.send(result)
+      res.send(result);
     });
 
-    app.delete("/foods/:id",  async (req, res) => {
+    app.delete("/foods/:id", async (req, res) => {
       const { id } = req.params;
       const result = await foodCollection.deleteOne({ _id: new ObjectId(id) });
-      res.send(result)
+      res.send(result);
     });
 
+
+    
     // Requested Foods
     app.get("/requestedFoods", async (req, res) => {
       const result = await requestedFoodsCollection.find().toArray();
       res.send(result);
     });
+
+    app.post("/requestedFoods", async (req, res) => {
+      const data = req.body;
+      const result = await requestedFoodsCollection.insertOne(data);
+      res.send(result);
+    });
+
+
+
 
 
     await client.db("admin").command({ ping: 1 });
