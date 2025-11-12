@@ -26,6 +26,7 @@ async function run() {
 
     const db = client.db("food-db");
     const foodCollection = db.collection("foods");
+    const requestedFoodsCollection = db.collection("requestedFoods");
 
     app.get("/foods", async (req, res) => {
       const result = await foodCollection.find().toArray();
@@ -88,6 +89,13 @@ async function run() {
       const result = await foodCollection.deleteOne({ _id: new ObjectId(id) });
       res.send(result)
     });
+
+    // Requested Foods
+    app.get("/requestedFoods", async (req, res) => {
+      const result = await requestedFoodsCollection.find().toArray();
+      res.send(result);
+    });
+
 
     await client.db("admin").command({ ping: 1 });
     console.log(
