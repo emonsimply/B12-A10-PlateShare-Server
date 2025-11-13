@@ -92,8 +92,6 @@ async function run() {
       res.send(result);
     });
 
-
-    
     // Requested Foods
     app.get("/requestedFoods", async (req, res) => {
       const result = await requestedFoodsCollection.find().toArray();
@@ -106,9 +104,17 @@ async function run() {
       res.send(result);
     });
 
+    app.put("/requestedFoods/:id", async (req, res) => {
+      const { id } = req.params;
+      const updateData = req.body;
+      const result = await requestedFoodsCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateData }
+      );
+      res.send(result);
+    });
 
-
-
+    
 
     await client.db("admin").command({ ping: 1 });
     console.log(
