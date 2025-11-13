@@ -39,10 +39,7 @@ async function run() {
 
       const result = await foodCollection.findOne({ _id: objectId });
 
-      res.send({
-        success: true,
-        result,
-      });
+      res.send(result);
     });
 
     app.get("/featured-foods", async (req, res) => {
@@ -68,10 +65,7 @@ async function run() {
     app.post("/foods", async (req, res) => {
       const data = req.body;
       const result = await foodCollection.insertOne(data);
-      res.send({
-        success: true,
-        result,
-      });
+      res.send(result);
     });
 
     app.put("/foods/:id", async (req, res) => {
@@ -114,8 +108,16 @@ async function run() {
       res.send(result);
     });
 
-    
+    app.get("/my-food-requests", async (req, res) => {
+      const email = req.query.email;
+      const result = await requestedFoodsCollection
+        .find({ userEmail: email })
+        .toArray();
+      res.send(result);
+    });
 
+
+    
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
